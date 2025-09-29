@@ -3,12 +3,13 @@ import type { IPosts, IPreviewPost } from "../../types"
 import { Axios } from "../../lib/api"
 
 export const Posts = () => {
-	const [posts, setPosts] = useState<IPosts | null>()
-	const [preview, setPreview] = useState(null)
+	const [posts, setPosts] = useState<IPosts[]>()
+	const [error,setError] = useState("")
+	const [preview, setPreview] = useState<IPreviewPost | null>(null)
 	const [title, setTitle] = useState("")
 	let picinput = useRef<HTMLInputElement>(null)
 	const handlePreview = () => {
-		if (picinput.current?.files) {
+		if (picinput.current?.files?.[0]) {
 			const file = picinput.current.files[0]
 			const reader = new FileReader()
 			reader.onload = () => {
@@ -26,22 +27,28 @@ export const Posts = () => {
 			})
 	},[])
 	const handleUpload = () => {
-		if (picinput.current?.files) {
+		if (picinput.current?.files?.[0]) {
 			const file = picinput.current.files[0]
 			const form = new FormData()
 
 			form.append("photo", file)
 			form.append("content", title)
 
-			Axios.post("/posts", form).then(response => {
+			Axios.post("/posts", form)
+			.then(response => {
 				console.log(response.data.payload)
 				setPreview(null)
 				setTitle("")
+				console.log(posts)
 				setPosts([...posts,{...response.data.payload}])
 			})
 		}
+		else{
+			setPreview(null)
+			setTitle("")
+			setError("Error Please input image")
+		}
 	}
-
 	return (
 		<div className="max-w-3xl mx-auto py-10 px-4 text-white">
 			<h3 className="text-4xl font-bold mb-10 text-purple-400 text-center">
@@ -51,7 +58,7 @@ export const Posts = () => {
 			{/* --- Post Input Section and Image--- */}
 			<div className="bg-gray-800 border border-gray-700 p-6 rounded-lg mb-12">
 				<h4 className="text-xl font-semibold text-purple-300 mb-4">Create a Post</h4>
-
+				{error && <h2 className="bg-red-600 text-white text-xl font-bold text-center py-4 px-6 rounded-lg shadow-lg border-2 border-red-800 my-6 animate-pulse">{error}</h2>}
 				<label className="block mb-2 text-sm text-gray-300">Post Title</label>
 				<input
 					type="text"
@@ -102,9 +109,6 @@ export const Posts = () => {
 
 
 			{/* --- Post Display Section --- */}
-			{posts?.length === 0 ? (
-				<p className="text-center text-gray-400">No posts available yet.</p>
-			) : (
 				<div className="space-y-9">
 					{posts?.map((post) => (
 						
@@ -124,7 +128,6 @@ export const Posts = () => {
 						</div>
 					))}
 				</div>
-			)}
 		</div>
 	)
 }

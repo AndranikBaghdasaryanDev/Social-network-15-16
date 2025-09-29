@@ -36,5 +36,6 @@ export interface IPosts{
 	title:string
 	picture:string
 	userId:number
-	likes:any[]
+	likes?:any[]
+	comments:object
 }
