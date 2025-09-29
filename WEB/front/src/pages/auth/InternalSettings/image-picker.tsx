@@ -1,6 +1,6 @@
 import { useRef, useState } from "react"
 import { Axios } from "../../../lib/api"
-import { useNavigate, useOutlet, useOutletContext } from "react-router-dom"
+import { useNavigate, useOutletContext } from "react-router-dom"
 import type { IContext } from "../../../types"
 
 export const ImagePicker = () => {
