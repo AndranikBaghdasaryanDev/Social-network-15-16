@@ -6,7 +6,7 @@ import { useState } from "react"
 
 
 export const UpdateLogin = () => {
-	const {register,handleSubmit,formState:{errors}} = useForm<IUpdateLogin>()
+	const {register,handleSubmit,formState:{errors},reset} = useForm<IUpdateLogin>()
 	const [success,setSucces] = useState("")
 	const [fail,setFail] = useState("")
 	const handleSave:SubmitHandler<IUpdateLogin> = data => {
@@ -15,9 +15,13 @@ export const UpdateLogin = () => {
 		.patch<IResponse>("/update/login",data)
 		.then(response => {
 			setSucces(`${response.data.message}`)
+			setFail("")
+			reset()
 		})
 		.catch(response => {
 			setFail(`${response.response.data.message}`)
+			setSucces("")
+			reset()
 		})
 	}
 	return (
