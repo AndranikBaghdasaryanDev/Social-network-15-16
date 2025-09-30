@@ -13,9 +13,12 @@ export const UpdatePassword = () => {
 		.then(response => {
 			 setSucces(response.data.message)
 			 setFail(null)
+			 reset()
 		})
 		.catch(response => {
 			setFail(response.response.data.message)
+			setSuccess(null)
+			reset()
 		})
 	}
 	return (
