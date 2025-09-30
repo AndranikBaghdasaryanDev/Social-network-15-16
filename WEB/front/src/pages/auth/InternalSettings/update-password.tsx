@@ -17,7 +17,7 @@ export const UpdatePassword = () => {
 		})
 		.catch(response => {
 			setFail(response.response.data.message)
-			setSuccess(null)
+			setSucces(null)
 			reset()
 		})
 	}
